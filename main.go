@@ -187,7 +187,7 @@ func main() {
 			return fmt.Errorf("USAGE: targets")
 		}
 
-		cfg := rc.Apply()
+		cfg := rc.Apply(false)
 		wide := 0
 		var keys []string
 		for name, _ := range cfg.Targets {
@@ -213,7 +213,7 @@ func main() {
 	})
 
 	r.Dispatch("target", func(command string, args ...string) error {
-		cfg := rc.Apply()
+		cfg := rc.Apply(false)
 		if len(args) == 0 {
 			if cfg.Target == "" {
 				ansi.Fprintf(os.Stderr, "@R{No Vault currently targeted}\n")
@@ -249,14 +249,14 @@ func main() {
 	})
 
 	r.Dispatch("env", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		ansi.Fprintf(os.Stderr, "  @B{VAULT_ADDR}  @G{%s}\n", os.Getenv("VAULT_ADDR"))
 		ansi.Fprintf(os.Stderr, "  @B{VAULT_TOKEN} @G{%s}\n", os.Getenv("VAULT_TOKEN"))
 		return nil
 	})
 
 	r.Dispatch("auth", func(command string, args ...string) error {
-		cfg := rc.Apply()
+		cfg := rc.Apply(true)
 
 		method := "token"
 		if len(args) > 0 {
@@ -300,7 +300,7 @@ func main() {
 	}, "login")
 
 	r.Dispatch("set", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		if len(args) < 2 {
 			return fmt.Errorf("USAGE: set path key[=value] [key ...]")
 		}
@@ -321,7 +321,7 @@ func main() {
 	}, "write")
 
 	r.Dispatch("paste", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		if len(args) < 2 {
 			return fmt.Errorf("USAGE: paste path key[=value] [key ...]")
 		}
@@ -342,7 +342,7 @@ func main() {
 	})
 
 	r.Dispatch("get", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		if len(args) < 1 {
 			return fmt.Errorf("USAGE: get path [path ...]")
 		}
@@ -359,7 +359,7 @@ func main() {
 	}, "read", "cat")
 
 	r.Dispatch("tree", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		if len(args) == 0 {
 			args = append(args, "secret")
 		}
@@ -375,7 +375,7 @@ func main() {
 	})
 
 	r.Dispatch("paths", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		if len(args) < 1 {
 			return fmt.Errorf("USAGE: paths path [path ...]")
 		}
@@ -393,7 +393,7 @@ func main() {
 	})
 
 	r.Dispatch("delete", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 
 		recurse, args := shouldRecurse(command, args...)
 
@@ -416,7 +416,7 @@ func main() {
 	}, "rm")
 
 	r.Dispatch("export", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		if len(args) < 1 {
 			return fmt.Errorf("USAGE: export path [path ...]")
 		}
@@ -446,7 +446,7 @@ func main() {
 	})
 
 	r.Dispatch("import", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		b, err := ioutil.ReadAll(os.Stdin)
 		if err != nil {
 			return err
@@ -469,7 +469,7 @@ func main() {
 	})
 
 	r.Dispatch("move", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 
 		recurse, args := shouldRecurse(command, args...)
 
@@ -491,7 +491,7 @@ func main() {
 	}, "mv", "rename")
 
 	r.Dispatch("copy", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 
 		recurse, args := shouldRecurse(command, args...)
 
@@ -513,7 +513,7 @@ func main() {
 	}, "cp")
 
 	r.Dispatch("gen", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		length := 64
 		if len(args) > 0 {
 			if u, err := strconv.ParseUint(args[0], 10, 16); err == nil {
@@ -541,7 +541,7 @@ func main() {
 	}, "auto")
 
 	r.Dispatch("ssh", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		bits := 2048
 		if len(args) > 0 {
 			if u, err := strconv.ParseUint(args[0], 10, 16); err == nil {
@@ -571,7 +571,7 @@ func main() {
 	})
 
 	r.Dispatch("rsa", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 		bits := 2048
 		if len(args) > 0 {
 			if u, err := strconv.ParseUint(args[0], 10, 16); err == nil {
@@ -633,7 +633,7 @@ func main() {
 	})
 
 	r.Dispatch("vault", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 
 		cmd := exec.Command("vault", args...)
 		cmd.Stdin = os.Stdin
@@ -648,7 +648,7 @@ func main() {
 	})
 
 	r.Dispatch("fmt", func(command string, args ...string) error {
-		rc.Apply()
+		rc.Apply(true)
 
 		if len(args) != 4 {
 			return fmt.Errorf("USAGE: fmt format_type path oldkey newkey")
