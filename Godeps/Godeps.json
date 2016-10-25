@@ -3,8 +3,25 @@
 	"GoVersion": "go1.5",
 	"Deps": [
 		{
+			"ImportPath": "github.com/blang/semver",
+			"Comment": "v3.3.0",
+			"Rev": "60ec3488bfea7cca02b021d106d9911120d25fe9"
+		},
+		{
 			"ImportPath": "github.com/ghodss/yaml",
 			"Rev": "73d445a93680fa1a78ae23a5839bad48f32ba1ee"
+		},
+		{
+			"ImportPath": "github.com/inconshreveable/go-update",
+			"Rev": "8152e7eb6ccf8679a64582a66b78519688d156ad"
+		},
+		{
+			"ImportPath": "github.com/inconshreveable/go-update/internal/binarydist",
+			"Rev": "8152e7eb6ccf8679a64582a66b78519688d156ad"
+		},
+		{
+			"ImportPath": "github.com/inconshreveable/go-update/internal/osext",
+			"Rev": "8152e7eb6ccf8679a64582a66b78519688d156ad"
 		},
 		{
 			"ImportPath": "github.com/kless/osutil/user/crypt",

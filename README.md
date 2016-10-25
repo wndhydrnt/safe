@@ -347,5 +347,9 @@ VAULT_ADDR=$OLD_VAULT safe export secret/sub/tree | \
   VAULT_ADDR=$NEW_VAULT safe import
 ```
 
+### update
+
+Update safe to the latest release available on GitHub.
+
 [vault]:  https://vaultproject.io
 [spruce]: https://github.com/geofffranks/spruce

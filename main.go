@@ -174,6 +174,9 @@ func main() {
 
     vault  ...
            Runs arbitrary commands through the vault cli.
+
+    update
+           Update safe to the latest release available on GitHub.
 `)
 		os.Exit(0)
 		return nil
@@ -798,6 +801,38 @@ func main() {
 
 		r, _ := httputil.DumpResponse(res, true)
 		fmt.Fprintf(os.Stdout, "%s\n", r)
+		return nil
+	})
+
+	r.Dispatch("update", func(command string, args ...string) error {
+		rc.Apply()
+
+		releases, err := readGithubReleases(safeGithubReleasesURL)
+		if err != nil {
+			return err
+		}
+
+		latest, err := findLatestRelease(releases)
+		if err != nil {
+			return err
+		}
+
+		if latest.TagName == Version {
+			fmt.Fprintf(os.Stdout, "Version %s is already the latest version", Version)
+		} else {
+			asset, err := findAssetForOS(latest)
+			if err != nil {
+				return err
+			}
+
+			fmt.Fprintf(os.Stdout, "Updating to version %s...\n", latest.TagName)
+
+			err = updateBinary(asset.BrowserDownloadURL)
+			if err != nil {
+				return err
+			}
+		}
+
 		return nil
 	})
 
